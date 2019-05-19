@@ -68,5 +68,27 @@ namespace DEVELOPMENT_PROJECTS_API.Controllers
             }
             return response.ToHttpResponse();
         }
+
+        //Delete Object
+        [HttpDelete("deleteproject/{id}")]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var response = new SingleResponse<SaveObjectReponse>();
+            try
+            {
+                var result = await _projectService.DeleteAsync(id);
+                if (!result.Success)
+                    response.Message = result.Message;
+                else
+                    response.Model = result;
+            }
+            catch(Exception ex)
+            {
+                response.DidError = true;
+                response.ErrorMessage = "There was an internal error, please contact to technical support," + ex;
+            }
+            return response.ToHttpResponse();
+        }
+
     }
 }

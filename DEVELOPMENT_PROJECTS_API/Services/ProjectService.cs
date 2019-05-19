@@ -40,7 +40,7 @@ namespace DEVELOPMENT_PROJECTS_API.Services
         {
             var existingProject = await _projectRepository.FindByProjectIdAsync(id);
             if (existingProject == null)
-                return new SaveObjectReponse("Category not found.");
+                return new SaveObjectReponse("project not found.");
 
             existingProject.Name = project.Name;
             existingProject.Description = project.Description;
@@ -48,6 +48,25 @@ namespace DEVELOPMENT_PROJECTS_API.Services
             try
             {
                 _projectRepository.Update(existingProject);
+                await _unitOfWork.CompleteAsync();
+
+                return new SaveObjectReponse(existingProject);
+            }
+            catch (Exception ex)
+            {
+                // Do some logging stuff
+                return new SaveObjectReponse($"An error occurred when updating the category: {ex.Message}");
+            }
+        }
+
+        public async Task<SaveObjectReponse> DeleteAsync(int id)
+        {
+            var existingProject = await _projectRepository.FindByProjectIdAsync(id);
+            if (existingProject == null)
+                return new SaveObjectReponse("project not found.");
+            try
+            {
+                _projectRepository.Remove(existingProject);
                 await _unitOfWork.CompleteAsync();
 
                 return new SaveObjectReponse(existingProject);

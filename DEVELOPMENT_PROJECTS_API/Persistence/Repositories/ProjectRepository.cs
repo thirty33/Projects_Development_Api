@@ -36,5 +36,10 @@ namespace DEVELOPMENT_PROJECTS_API.Persistence.Repositories
         {
             _context.Projects.Update(project);
         }
+
+        public void Remove(Project project)
+        {
+            _context.Projects.Remove(project);
+        }
     }
 }

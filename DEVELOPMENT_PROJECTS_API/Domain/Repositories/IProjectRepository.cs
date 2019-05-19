@@ -12,5 +12,6 @@ namespace DEVELOPMENT_PROJECTS_API.Domain.Repositories
         Task AddAsync(Project project);
         Task<Project> FindByProjectIdAsync(int id);
         void Update(Project project);
+        void Remove(Project project);
     }
 }

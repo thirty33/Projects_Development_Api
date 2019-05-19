@@ -11,5 +11,7 @@ namespace DEVELOPMENT_PROJECTS_API.Domain.Services
     {
         Task<SaveObjectReponse> SaveAsync(Project project);
         Task<SaveObjectReponse> UpdateAsync(int id, Project project);
+        Task<SaveObjectReponse> DeleteAsync(int id);
+
     }
 }
