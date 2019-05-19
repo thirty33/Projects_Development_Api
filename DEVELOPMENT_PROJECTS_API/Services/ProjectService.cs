@@ -35,5 +35,29 @@ namespace DEVELOPMENT_PROJECTS_API.Services
                 return new SaveObjectReponse($"An error occurred when saving the category: {ex.Message}");
             }
         }
+
+        public async Task<SaveObjectReponse> UpdateAsync(int id, Project project)
+        {
+            var existingProject = await _projectRepository.FindByProjectIdAsync(id);
+            if (existingProject == null)
+                return new SaveObjectReponse("Category not found.");
+
+            existingProject.Name = project.Name;
+            existingProject.Description = project.Description;
+            existingProject.CreationDate = project.CreationDate;
+            try
+            {
+                _projectRepository.Update(existingProject);
+                await _unitOfWork.CompleteAsync();
+
+                return new SaveObjectReponse(existingProject);
+            }
+            catch (Exception ex)
+            {
+                // Do some logging stuff
+                return new SaveObjectReponse($"An error occurred when updating the category: {ex.Message}");
+            }
+        }
+
     }
 }

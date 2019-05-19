@@ -22,10 +22,19 @@ namespace DEVELOPMENT_PROJECTS_API.Persistence.Repositories
                 .ToListAsync();
         }
 
-
         public async Task AddAsync(Project project)
         {
             await _context.Projects.AddAsync(project);
+        }
+
+        public async Task<Project> FindByProjectIdAsync(int id)
+        {
+            return await _context.Projects.FindAsync(id);
+        }
+
+        public void Update(Project project)
+        {
+            _context.Projects.Update(project);
         }
     }
 }

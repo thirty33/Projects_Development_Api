@@ -8,14 +8,14 @@ namespace DEVELOPMENT_PROJECTS_API.Helpers
 {
     public class SaveObjectReponse : BaseResponse
     {
-        public Project Project { get; private set; }
+        public Object Object { get; private set; }
 
-        private SaveObjectReponse(bool success, string message, Project project) : base(success, message)
+        private SaveObjectReponse(bool success, string message, Object @object) : base(success, message)
         {
-            Project = project;
+            Object = @object;
         }
 
-        public SaveObjectReponse(Project project) : this(true, string.Empty, project)
+        public SaveObjectReponse(Object @object) : this(true, string.Empty, @object)
         { }
 
         public SaveObjectReponse(string message) : this(false, message, null)

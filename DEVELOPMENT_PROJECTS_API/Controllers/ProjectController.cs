@@ -46,5 +46,27 @@ namespace DEVELOPMENT_PROJECTS_API.Controllers
             }
             return response.ToHttpResponse();
         }
+
+        //Update project
+        [HttpPut("modifyproject/{id}")]
+        public async Task<IActionResult> PutAsync(int id, [FromBody] ProjectResource resource)
+        {
+            var response = new SingleResponse<SaveObjectReponse>();
+            try
+            {
+                var project = _mapper.Map<ProjectResource, Project>(resource);
+                var result = await _projectService.UpdateAsync(id, project);
+
+                if (!result.Success)
+                    response.Message = result.Message;
+                response.Model = result;
+            }
+            catch (Exception ex)
+            {
+                response.DidError = true;
+                response.ErrorMessage = "There was an internal error, please contact to technical support," + ex;
+            }
+            return response.ToHttpResponse();
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace DEVELOPMENT_PROJECTS_API.Domain.Repositories
     {
         Task<IEnumerable<Project>> ListProjectByUser(int userId);
         Task AddAsync(Project project);
-        //Task<Project> DeleteProject(Project @object);
-        //Task<Project> ModifyProject(int ProjectId, Project @object);
+        Task<Project> FindByProjectIdAsync(int id);
+        void Update(Project project);
     }
 }
