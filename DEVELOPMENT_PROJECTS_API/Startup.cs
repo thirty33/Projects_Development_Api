@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using DEVELOPMENT_PROJECTS_API.Domain.Repositories;
+using DEVELOPMENT_PROJECTS_API.Domain.Services;
 using DEVELOPMENT_PROJECTS_API.Helpers;
 using DEVELOPMENT_PROJECTS_API.Persistence.Context;
+using DEVELOPMENT_PROJECTS_API.Persistence.Repositories;
+using DEVELOPMENT_PROJECTS_API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,6 +43,13 @@ namespace DEVELOPMENT_PROJECTS_API
                 options.UseNpgsql("server=localhost;user id=postgres;password=postgres;database=development_projects_db");
             });
             ConfigureJwtAuthentication(services);
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IJobRepository, JobRepository>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

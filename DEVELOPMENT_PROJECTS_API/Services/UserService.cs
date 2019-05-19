@@ -18,11 +18,16 @@ namespace DEVELOPMENT_PROJECTS_API.Services
     {
         private readonly AppSettings _appSettings;
         private readonly IUserRepository _userRepository;
+        private readonly IProjectRepository _projectRepository;
+        private readonly IJobRepository _jobRepository;
 
-        public UserService(IOptions<AppSettings> appSettings, IUserRepository userRepository)
+        public UserService(IOptions<AppSettings> appSettings, IUserRepository userRepository,
+                IProjectRepository projectRepository, IJobRepository jobRepository)
         {
             _appSettings = appSettings.Value;
             _userRepository = userRepository;
+            _projectRepository = projectRepository;
+            _jobRepository = jobRepository;
         }
 
         public async Task<User> Authenticate(string username, string password)
@@ -47,10 +52,19 @@ namespace DEVELOPMENT_PROJECTS_API.Services
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-
             var token = tokenHandler.CreateToken(tokenDescriptor);
             user.Token = tokenHandler.WriteToken(token);
             return user;
+        }
+
+        public async Task<IEnumerable<Project>> GetProjectsByUser(int userId)
+        {
+            return await _projectRepository.ListProjectByUser(userId);
+        }
+
+        public async Task<IEnumerable<Job>> GetJobsByUser(int userId)
+        {
+            return await _jobRepository.ListJobsByUser(userId);
         }
     }
 }

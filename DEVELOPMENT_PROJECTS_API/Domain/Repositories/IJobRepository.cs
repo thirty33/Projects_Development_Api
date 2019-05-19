@@ -9,8 +9,8 @@ namespace DEVELOPMENT_PROJECTS_API.Domain.Repositories
     public interface IJobRepository
     {
         Task<IEnumerable<Job>> ListJobsByUser(int userId);
-        Task<Job> CreateJob(Job @object);
-        Task<Job> DeleteJob(Job @object);
-        Task<Job> ModifyJob(int jobId, Job @object);
+        //Task<Job> CreateJob(Job @object);
+        //Task<Job> DeleteJob(Job @object);
+        //Task<Job> ModifyJob(int jobId, Job @object);
     }
 }
