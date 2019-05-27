@@ -22,9 +22,11 @@ namespace DEVELOPMENT_PROJECTS_API.Persistence.Context
             try
             {
                 base.OnModelCreating(builder);
+                builder.ForNpgsqlUseIdentityColumns();
 
                 builder.Entity<User>().ToTable("Users");
                 builder.Entity<User>().HasKey(p => p.Id);
+                builder.Entity<User>().Property(p => p.Id);
                 builder.Entity<User>().Property(p => p.FirstName).IsRequired().HasMaxLength(20);
                 builder.Entity<User>().Property(p => p.Password).IsRequired();
                 builder.Entity<User>().Property(p => p.LastName).IsRequired().HasMaxLength(20);
@@ -37,8 +39,15 @@ namespace DEVELOPMENT_PROJECTS_API.Persistence.Context
                     new User { Id = 02, FirstName = "Gustavo", LastName = "Suarez", Username = "gustav01", Password = "user", Role = Role.User }
                 );
 
+                //builder.Entity<User>().HasData
+                //(
+                //    new User {  FirstName = "Joel", LastName = "Suarez", Username = "joel01", Password = "admin", Role = Role.Admin },
+                //    new User {  FirstName = "Gustavo", LastName = "Suarez", Username = "gustav01", Password = "user", Role = Role.User }
+                //);
+
                 builder.Entity<Project>().ToTable("Projects");
                 builder.Entity<Project>().HasKey(p => p.Id);
+                builder.Entity<Project>().Property(p => p.Id).ValueGeneratedOnAdd();
                 builder.Entity<Project>().Property(p => p.Name).IsRequired().HasMaxLength(50);
                 builder.Entity<Project>().Property(p => p.UserId).IsRequired();
                 builder.Entity<Project>().Property(p => p.Description).IsRequired().HasMaxLength(100);
@@ -53,6 +62,7 @@ namespace DEVELOPMENT_PROJECTS_API.Persistence.Context
 
                 builder.Entity<Job>().ToTable("Jobs");
                 builder.Entity<Job>().HasKey(p => p.Id);
+                builder.Entity<Job>().Property(p => p.Id).ValueGeneratedOnAdd();
                 builder.Entity<Job>().Property(p => p.Name).IsRequired().HasMaxLength(50);
                 builder.Entity<Job>().Property(p => p.UserId).IsRequired();
                 builder.Entity<Job>().Property(p => p.Description).IsRequired().HasMaxLength(100);

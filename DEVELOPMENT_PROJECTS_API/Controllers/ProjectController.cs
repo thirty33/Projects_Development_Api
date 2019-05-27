@@ -25,18 +25,19 @@ namespace DEVELOPMENT_PROJECTS_API.Controllers
             _projectService = projectService;
             _mapper = mapper;
         }
+        
         //Save Project
         [HttpPost("saveproject")]
         public async Task<IActionResult> PostAsync([FromBody] ProjectResource resource)
         {
-            var response = new SingleResponse<SaveObjectReponse>();
+            var response = new SingleResponse<Project>();
             try
             {
                 var project = _mapper.Map<ProjectResource, Project>(resource);
                 var result = await _projectService.SaveAsync(project);
 
-                if (!result.Success)
-                    response.Message = result.Message;
+                if (result == null )
+                    response.Message = "the entity has not available";
                 response.Model = result;
             }
             catch(Exception ex)
@@ -51,14 +52,14 @@ namespace DEVELOPMENT_PROJECTS_API.Controllers
         [HttpPut("modifyproject/{id}")]
         public async Task<IActionResult> PutAsync(int id, [FromBody] ProjectResource resource)
         {
-            var response = new SingleResponse<SaveObjectReponse>();
+            var response = new SingleResponse<Project>();
             try
             {
                 var project = _mapper.Map<ProjectResource, Project>(resource);
                 var result = await _projectService.UpdateAsync(id, project);
 
-                if (!result.Success)
-                    response.Message = result.Message;
+                if (result == null)
+                    response.Message = "the entity has not available";
                 response.Model = result;
             }
             catch (Exception ex)
@@ -70,17 +71,37 @@ namespace DEVELOPMENT_PROJECTS_API.Controllers
         }
 
         //Delete Object
+        //[HttpDelete("deleteproject/{id}")]
+        //public async Task<IActionResult> DeleteAsync(int id)
+        //{
+        //    var response = new SingleResponse<SaveObjectReponse>();
+        //    try
+        //    {
+        //        var result = await _projectService.DeleteAsync(id);
+        //        if (!result.Success)
+        //            response.Message = result.Message;
+        //        else
+        //            response.Model = result;
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        response.DidError = true;
+        //        response.ErrorMessage = "There was an internal error, please contact to technical support," + ex;
+        //    }
+        //    return response.ToHttpResponse();
+        //}
+        
+        //Delete Object
         [HttpDelete("deleteproject/{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var response = new SingleResponse<SaveObjectReponse>();
+            var response = new SingleResponse<Project>();
             try
             {
                 var result = await _projectService.DeleteAsync(id);
-                if (!result.Success)
-                    response.Message = result.Message;
-                else
-                    response.Model = result;
+                if (result == null)
+                    response.Message = "the entity has not available";
+                response.Model = result;
             }
             catch(Exception ex)
             {
