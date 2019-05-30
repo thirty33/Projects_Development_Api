@@ -3,6 +3,7 @@ using DEVELOPMENT_PROJECTS_API.Domain.Services;
 using DEVELOPMENT_PROJECTS_API.Helpers;
 using DEVELOPMENT_PROJECTS_API.Models;
 using DEVELOPMENT_PROJECTS_API.Resources;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DEVELOPMENT_PROJECTS_API.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("[controller]")]
     public class ProjectController : ControllerBase

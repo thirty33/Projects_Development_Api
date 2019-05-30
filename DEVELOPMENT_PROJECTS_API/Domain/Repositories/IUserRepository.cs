@@ -13,5 +13,7 @@ namespace DEVELOPMENT_PROJECTS_API.Domain.Repositories
         Task<User> GetById(int id);
         //Task<User> DeleteUserById(int id);
         //Task<User> RegisterUser(User @object);
+
+        Task SaveUserAsync(User user);
     }
 }

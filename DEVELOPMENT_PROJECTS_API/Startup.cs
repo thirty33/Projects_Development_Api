@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DEVELOPMENT_PROJECTS_API.Domain.Repositories;
 using DEVELOPMENT_PROJECTS_API.Domain.Services;
 using DEVELOPMENT_PROJECTS_API.Helpers;
@@ -13,14 +8,13 @@ using DEVELOPMENT_PROJECTS_API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DEVELOPMENT_PROJECTS_API
 {
@@ -36,19 +30,33 @@ namespace DEVELOPMENT_PROJECTS_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            //services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddLogging();
+
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseNpgsql("server=localhost;user id=postgres;password=postgres;database=development_projects_db");
             });
-            ConfigureJwtAuthentication(services);
+
+            services.AddDistributedRedisCache(options =>
+            {
+                options.Configuration = Configuration["redis:connectionString"];
+            });
+
+            services.AddTransient<TokenManagerMiddleware>();
+            services.AddTransient<ITokenManager, Services.TokenManager>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IJobRepository, JobRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            ConfigureJwtAuthentication(services);
+
             services.AddAutoMapper(typeof(Startup));
         }
 
@@ -56,10 +64,10 @@ namespace DEVELOPMENT_PROJECTS_API
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             // global cors policy
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            //app.UseCors(x => x
+            //    .AllowAnyOrigin()
+            //    .AllowAnyMethod()
+            //    .AllowAnyHeader());
 
             if (env.IsDevelopment())
             {
@@ -71,8 +79,9 @@ namespace DEVELOPMENT_PROJECTS_API
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseAuthentication();
+            app.UseMiddleware<TokenManagerMiddleware>();
             app.UseMvc();
         }
 
@@ -83,23 +92,19 @@ namespace DEVELOPMENT_PROJECTS_API
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
+            services.AddAuthentication()
+                .AddJwtBearer(x =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
         }
     }
 }

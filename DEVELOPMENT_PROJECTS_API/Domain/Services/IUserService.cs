@@ -11,6 +11,8 @@ namespace DEVELOPMENT_PROJECTS_API.Domain.Services
         Task<User> Authenticate(string username, string password);
         Task<IEnumerable<Project>> GetProjectsByUser(int userId);
         Task<IEnumerable<Job>> GetJobsByUser(int userId);
+
+        Task<User> RegisterUser(User user);
         //Task<string> SendNotification(Object @form);
         //Task<User> RegisterUser(string username, string password);
         //Task<User> DeleteUser(User @user);

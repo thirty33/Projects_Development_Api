@@ -21,21 +21,6 @@ namespace DEVELOPMENT_PROJECTS_API.Services
             _unitOfWork = unitOfWork;
         }
 
-        //public async Task<SaveObjectReponse> SaveAsync(Project project)
-        //{
-        //    try
-        //    {
-        //        await _projectRepository.AddAsync(project);
-        //        await _unitOfWork.CompleteAsync();
-
-        //        return new SaveObjectReponse(project);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new SaveObjectReponse($"An error occurred when saving the category: {ex.Message}");
-        //    }
-        //}
-
         public async Task<Project> SaveAsync(Project project)
         {
             try
@@ -50,29 +35,6 @@ namespace DEVELOPMENT_PROJECTS_API.Services
                 return null;
             }
         }
-
-        //public async Task<SaveObjectReponse> UpdateAsync(int id, Project project)
-        //{
-        //    var existingProject = await _projectRepository.FindByProjectIdAsync(id);
-        //    if (existingProject == null)
-        //        return new SaveObjectReponse("project not found.");
-
-        //    existingProject.Name = project.Name;
-        //    existingProject.Description = project.Description;
-        //    existingProject.CreationDate = project.CreationDate;
-        //    try
-        //    {
-        //        _projectRepository.Update(existingProject);
-        //        await _unitOfWork.CompleteAsync();
-
-        //        return new SaveObjectReponse(existingProject);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Do some logging stuff
-        //        return new SaveObjectReponse($"An error occurred when updating the category: {ex.Message}");
-        //    }
-        //}
 
         public async Task<Project> UpdateAsync(int id, Project project)
         {

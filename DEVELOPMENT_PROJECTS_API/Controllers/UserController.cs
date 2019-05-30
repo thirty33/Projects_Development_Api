@@ -3,6 +3,7 @@ using DEVELOPMENT_PROJECTS_API.Domain.Services;
 using DEVELOPMENT_PROJECTS_API.Helpers;
 using DEVELOPMENT_PROJECTS_API.Models;
 using DEVELOPMENT_PROJECTS_API.Resources;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,24 +13,26 @@ using System.Threading.Tasks;
 
 namespace DEVELOPMENT_PROJECTS_API.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private IUserService _userService;
         private readonly IMapper _mapper;
-        public UserController(IUserService userService, IMapper mapper)
+        private readonly ITokenManager _tokenManager;
+        public UserController(IUserService userService, IMapper mapper, ITokenManager tokenManager)
         {
             _userService = userService;
             _mapper = mapper;
+            _tokenManager = tokenManager;
         }
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> Authenticate([FromBody]User userParam)
+        public async Task<IActionResult> Authenticate([FromBody] User userParam)
         {
             var response = new SingleResponse<UserResource>();
             try
@@ -97,6 +100,37 @@ namespace DEVELOPMENT_PROJECTS_API.Controllers
                 response.DidError = true;
                 response.ErrorMessage = "There was an internal error, please contact to technical support," + ex;
             }
+            return response.ToHttpResponse();
+        }
+
+        //Register User
+        [AllowAnonymous]
+        [HttpPost("sign-up")]
+        public async Task<IActionResult> SignUp([FromBody] User user)
+        {
+            var response = new SingleResponse<User>();
+            try
+            {
+                var resource = await _userService.RegisterUser(user);
+                if (resource == null)
+                    response.Message = "user not registered";
+                response.Model = _mapper.Map<User>(resource);
+            }
+            catch (Exception ex)
+            {
+                response.DidError = true;
+                response.ErrorMessage = "There was an internal error, please contact to technical support," + ex;
+            }
+            return response.ToHttpResponse();
+        }
+
+        //SignOut
+        [HttpPost("sign-out")]
+        public async Task<IActionResult> SignOut()
+        {
+            var response = new SingleResponse<string>();
+            await _tokenManager.DeactivateCurrentAsync();
+            response.Model = "user session closed";
             return response.ToHttpResponse();
         }
     }

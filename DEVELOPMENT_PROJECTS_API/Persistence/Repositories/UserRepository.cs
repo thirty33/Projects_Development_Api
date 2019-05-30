@@ -30,5 +30,10 @@ namespace DEVELOPMENT_PROJECTS_API.Persistence.Repositories
         {
             return await _context.Users.FirstOrDefaultAsync(i => i.Id == id);
         }
+
+        public async Task SaveUserAsync(User user)
+        {
+            await _context.Users.AddAsync(user);
+        }
     }
 }
