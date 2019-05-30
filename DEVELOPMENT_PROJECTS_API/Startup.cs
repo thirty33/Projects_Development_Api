@@ -54,6 +54,8 @@ namespace DEVELOPMENT_PROJECTS_API
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IMessageService, MessageService>();
 
             ConfigureJwtAuthentication(services);
 

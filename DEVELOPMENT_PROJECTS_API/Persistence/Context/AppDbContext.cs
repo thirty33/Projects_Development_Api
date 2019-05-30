@@ -100,10 +100,11 @@ namespace DEVELOPMENT_PROJECTS_API.Persistence.Context
                         InformationItems = new List<string>
                         {
                             "Maquetacion web (css-grid, flexbox, responsive desing, jquery)",
-                            "Arquitectura MVC, MVVM, Patrones de diseno",
-                            "REST API",
+                            "Arquitectura MVC, MVVM, REST API, Patrones de diseno",
+                            "Manejo de Servicios (Postman, Swagger)",
                             "Bases de datos (MYSQL, POSTGRESQL)",
-                            "Control de Versiones",
+                            "Control de Versiones (Git)",
+                            "Organizacion de Tareas (Trello)",
                         },
                         UserId = 01
                     },
@@ -140,9 +141,10 @@ namespace DEVELOPMENT_PROJECTS_API.Persistence.Context
 
                 builder.Entity<ContactMe>().ToTable("Requirements");
                 builder.Entity<ContactMe>().HasKey(p => p.Id);
+                builder.Entity<ContactMe>().Property(p => p.Id).ValueGeneratedOnAdd();
                 builder.Entity<ContactMe>().Property(p => p.Name).IsRequired();
-                builder.Entity<ContactMe>().Property(p => p.MessageSubject).IsRequired().HasMaxLength(20);
-                builder.Entity<ContactMe>().Property(p => p.Message).IsRequired().HasMaxLength(50);
+                builder.Entity<ContactMe>().Property(p => p.MessageSubject).IsRequired().HasMaxLength(100);
+                builder.Entity<ContactMe>().Property(p => p.Message).IsRequired().HasMaxLength(900);
 
 
                 builder.Entity<Project>()
