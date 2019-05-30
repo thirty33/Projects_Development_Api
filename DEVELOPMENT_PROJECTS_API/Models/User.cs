@@ -16,5 +16,6 @@ namespace DEVELOPMENT_PROJECTS_API.Models
         public string Token { get; set; }
         public List<Project> Projects { get; set; }
         public List<Job> Jobs { get; set; }
+        public List<UserInformation> UserInfo { get; set; }
     }
 }

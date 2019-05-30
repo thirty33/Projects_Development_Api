@@ -1,4 +1,5 @@
 ﻿using DEVELOPMENT_PROJECTS_API.Models;
+using DEVELOPMENT_PROJECTS_API.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,7 @@ namespace DEVELOPMENT_PROJECTS_API.Domain.Repositories
         //Task<User> RegisterUser(User @object);
 
         Task SaveUserAsync(User user);
+        //Task<User> ReturnUserData(int _userId);
+        Task<UserResource> ReturnUserData(int _userId);
     }
 }

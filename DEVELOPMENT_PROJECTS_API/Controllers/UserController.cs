@@ -6,6 +6,8 @@ using DEVELOPMENT_PROJECTS_API.Resources;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Nancy.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +74,24 @@ namespace DEVELOPMENT_PROJECTS_API.Controllers
                 }
             }
             catch(Exception ex)
+            {
+                response.DidError = true;
+                response.ErrorMessage = "There was an internal error, please contact to technical support," + ex;
+            }
+            return response.ToHttpResponse();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getalluserdata/{id}")]
+        public async Task<IActionResult> getUserData(int id)
+        {
+            var response = new SingleResponse<UserResource>();
+            try
+            {
+                var user = await _userService.GetAllUserData(id);
+                response.Model = user;
+            }
+            catch (Exception ex)
             {
                 response.DidError = true;
                 response.ErrorMessage = "There was an internal error, please contact to technical support," + ex;

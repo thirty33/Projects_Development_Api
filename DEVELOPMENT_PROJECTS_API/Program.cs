@@ -16,13 +16,20 @@ namespace DEVELOPMENT_PROJECTS_API
     {
         public static void Main(string[] args)
         {
-            var host = CreateWebHostBuilder(args);
-            using (var scope = host.Services.CreateScope())
-            using (var context = scope.ServiceProvider.GetService<AppDbContext>())
+            try
             {
-                context.Database.EnsureCreated();
+                var host = CreateWebHostBuilder(args);
+                using (var scope = host.Services.CreateScope())
+                using (var context = scope.ServiceProvider.GetService<AppDbContext>())
+                {
+                    context.Database.EnsureCreated();
+                }
+                host.Run();
             }
-            host.Run();
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public static IWebHost CreateWebHostBuilder(string[] args) =>

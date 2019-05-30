@@ -2,6 +2,7 @@
 using DEVELOPMENT_PROJECTS_API.Domain.Services;
 using DEVELOPMENT_PROJECTS_API.Helpers;
 using DEVELOPMENT_PROJECTS_API.Models;
+using DEVELOPMENT_PROJECTS_API.Resources;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -86,6 +87,12 @@ namespace DEVELOPMENT_PROJECTS_API.Services
                 return null; 
             }
 
+        }
+
+        public async Task<UserResource> GetAllUserData(int _userId)
+        {
+            var result = await _userRepository.ReturnUserData(_userId);
+            return result;
         }
     }
 }
